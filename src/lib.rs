@@ -3,4 +3,3 @@ mod interface;
 mod renderer;
 
 pub use interface::TerminalLogger;
-use renderer::Renderer;

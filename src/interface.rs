@@ -35,7 +35,7 @@ impl TerminalLogger {
     self.started
   }
 
-  pub fn render(&mut self, message: String) {
+  pub fn display(&self, message: String) {
     if self.started {
       if let Some(sending_channel) = &self.sending_channel {
         sending_channel.send(Command::Display(message)).unwrap();
@@ -44,16 +44,16 @@ impl TerminalLogger {
   }
 
   pub fn stop(&mut self) {
-    // if self.started {
-    //   if let Some(sending_channel) = &self.sending_channel {
-    //     sending_channel.send(Command::Stop).unwrap();
-    //   }
+    if self.started {
+      if let Some(sending_channel) = &self.sending_channel {
+        sending_channel.send(Command::Stop).unwrap();
+      }
 
-    //   if let Some(handle) = &self.drawing_thread_handle {
-    //     handle.join().unwrap();
-    //   }
+      if self.drawing_thread_handle.is_some() {
+        self.drawing_thread_handle.take().unwrap().join().unwrap();
+      }
 
-    //   self.started = false;
-    // }
+      self.started = false;
+    }
   }
 }
